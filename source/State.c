@@ -15,6 +15,7 @@ void initState()
 {
     setAction(STOP_FLOOR);
     updateLastFloor();
+    return;
 }
 
 void updateLastFloor() {
@@ -22,6 +23,7 @@ void updateLastFloor() {
     if (floor != -1){
         t.lastFloor = floor;
     }
+    return;
 }
 int getLastFloor(){
     return t.lastFloor;
