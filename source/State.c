@@ -3,17 +3,17 @@
 
 
 
-typedef struct State {
+typedef struct OrtState {
     int lastFloor;
-    Action action;
     Direction direction;
-} State;
+} OrtState;
 
-static State t = {-1,STOP_BETWEEN,DOWN};
+static OrtState t = {-1,DOWN};
 
-void initState()
+
+void initOrtState()
 {
-    setAction(STOP_FLOOR);
+    //setAction(STOP_FLOOR);
     updateLastFloor();
     return;
 }
@@ -28,10 +28,7 @@ void updateLastFloor() {
 int getLastFloor(){
     return t.lastFloor;
 }
-Action getAction()
-{
-    return t.action;
-}
+
 Direction getDirection()
 {
     return t.direction;
@@ -43,8 +40,13 @@ void setDirection(Direction dir)
     return;
 }
 
+Action getAction()
+{
+    //return t.action;
+}
+
 void setAction(Action a)
 {
-    t.action = a;
+    //t.action = a;
     return;
 }

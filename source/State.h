@@ -21,4 +21,4 @@ void updateLastFloor();
 void setDirection(Direction dir);
 void setAction(Action a);
 
-void initState();
+void initOrtState();
