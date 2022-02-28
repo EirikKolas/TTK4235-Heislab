@@ -1,17 +1,5 @@
 #pragma once
-typedef enum
-{
-    MOVING = 0,
-    STOP_FLOOR = 1,
-    STOP_BETWEEN = 2
-} Action;
-
-typedef enum
-{
-    DOWN = 0,
-    UP = 1,
-    STOP = 2
-} Direction;
+#include "elevatorEnums.h"
 
 int getLastFloor();
 Action getAction();

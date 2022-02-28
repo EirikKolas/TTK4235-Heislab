@@ -39,7 +39,20 @@ void setDirection(Direction dir)
     t.direction = dir;
     return;
 }
-
+void swapDirection()            //Does not swap none
+{
+    switch (getDirection())
+    {
+    case UP:
+        setDirection(DOWN);
+        break;
+     case DOWN:
+        setDirection(UP);
+        break;
+    default:
+        break;
+    }
+}
 Action getAction()
 {
     //return t.action;

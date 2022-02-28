@@ -27,7 +27,7 @@ void move(Direction dir)
     case DOWN:
         elevio_motorDirection(DIRN_DOWN);
         break;
-    case STOP:
+    case NONE:
         elevio_motorDirection(DIRN_STOP);
         break;
     default:

@@ -22,6 +22,7 @@ void deactivateButtonLamps(int floor)
     {
         elevio_buttonLamp(floor, b, 0);
     }
+    elevio_stopLamp(0);
 }
 void initLights()
 {
