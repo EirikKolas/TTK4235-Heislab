@@ -1,8 +1,0 @@
-{
-    "files.associations": {
-        "elevio.h": "c",
-        "motor.h": "c",
-        "stdbool.h": "c",
-        "state.h": "c"
-    }
-}

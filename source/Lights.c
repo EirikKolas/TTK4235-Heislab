@@ -1,8 +1,7 @@
 #include "Lights.h"
 #include "driver/elevio.h"
-#include "State.h"
 
-void activateButtonLamps()
+ativateButtonLamps()
 {
     // Les av knapper og slå på lys
     for (int f = 0; f < N_FLOORS; f++)
@@ -16,6 +15,7 @@ void activateButtonLamps()
         }
     }
 }
+
 void deactivateButtonLamps(int floor)
 {
     for (int b = 0; b < N_BUTTONS; b++)
@@ -24,10 +24,29 @@ void deactivateButtonLamps(int floor)
     }
     elevio_stopLamp(0);
 }
+
 void initLights()
 {
     for (int f = 0; f < N_FLOORS; f++)
     {
         deactivateButtonLamps(f);
+    }
+}
+
+void setButtonlamp(int floor, Direction dir, bool value)
+{
+    switch (dir)
+    {
+    case UP:
+        elevio_buttonLamp(floor, BUTTON_HALL_UP, value);
+        break;
+    case DOWN:
+        elevio_buttonLamp(floor, BUTTON_HALL_DOWN, value);
+        break;
+    case NONE:
+        elevio_buttonLamp(floor, BUTTON_CAB, value);
+        break;
+    default:
+        break;
     }
 }

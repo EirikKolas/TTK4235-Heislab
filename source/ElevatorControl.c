@@ -2,13 +2,15 @@
 #include <stdlib.h>
 #include <signal.h>
 #include <time.h>
+#include "driver/elevio.h"              //Skal fjernes
 #include "ElevatorControl.h"
 #include "State.h"
 #include "Motor.h"
 #include "Lights.h"
 #include "Bookings.h"
-#include "driver/elevio.h"              //Skal fjernes
+#include "Buttons.h"
 
+void updateFloorPanel();
 
 void initElevator()
 {
@@ -16,6 +18,7 @@ void initElevator()
     initOrtState();
     initBookings();
     initLights();
+    printf("=== Example Program ===\n");
     printf("=== Example Program ===\n");
     printf("Press the stop button on the elevator panel to exit\n");
 }
@@ -40,7 +43,7 @@ Trigger stopFloorState(void)
     //if (doorClosed())
         //hent ny bestilling
         //Oppdater bestillinger
-
+    updateFloorPanel();
 
         //oppdater retning om nødvendig
         //return move
@@ -174,13 +177,29 @@ void runElevator()
         currentState = lookupTransitions(currentState, trig);
         
         //midlertidig exit
-        if(elevio_stopButton()){
+        if(elevio_stopButton())
+        {
             move(NONE);
             elevio_stopLamp(1);
             break;
         }
         nanosleep(&(struct timespec){0, 20*1000*1000}, NULL); //Funker uten nanosleep
     }
+}
 
-
+void updateFloorPanel()
+{
+    for (int floor = 0; floor < numFloors(); floor++)
+    {
+        for (int dir = 0; dir < NUM_DIRECTIONS; dir++)
+        {
+            if (getButtonValue(floor, dir))
+            {
+                setButtonlamp(floor, dir, true);
+                setBooking(floor, dir);
+            }
+        }
+        
+    }
+    
 }

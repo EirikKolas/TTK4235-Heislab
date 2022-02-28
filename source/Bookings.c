@@ -60,17 +60,17 @@ void setBooking(int floor, Direction dir)
     {
     case UP:
         levels[floor].up = true;
-        if (floor == 0)
+        /* if (floor == 0)
         {
             levels[floor].down = true;
-        }
+        } */
         break;
     case DOWN:
         levels[floor].down = true;
-        if (floor == N_FLOORS-1)
+        /* if (floor == N_FLOORS-1)
         {
             levels[floor].up = true;
-        }
+        } */
         break;
     case NONE:
         levels[floor].up = true;
@@ -145,7 +145,7 @@ int getNextDestination(int currentFloor, Direction dir)
     {
         dir = dir == UP ? DOWN : UP; //bytter retning hvis øverst eller nederst
     }
-    int floor = currentFloor + directionToInt(dir); //begynner å sjekke fra etasjen over/under
+    int floor = currentFloor + dirToInt(dir); //begynner å sjekke fra etasjen over/under
     Direction originalDir = dir;
 
 
@@ -156,7 +156,7 @@ int getNextDestination(int currentFloor, Direction dir)
             return floor;
         }
 
-        floor += directionToInt(dir);
+        floor += dirToInt(dir);
 
         if (floor == N_FLOORS-1 || floor == 0)
         {
@@ -197,7 +197,7 @@ int getNextDestination(int currentFloor, Direction dir)
 }
 
 
-int directionToInt(Direction dir)
+int dirToInt(Direction dir)
 {
     return dir==UP?1:-1;
 }
