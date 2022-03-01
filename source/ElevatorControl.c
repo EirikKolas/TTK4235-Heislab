@@ -9,6 +9,7 @@
 #include "Lights.h"
 #include "Bookings.h"
 #include "Buttons.h"
+#include "Timer.h"
 
 void updateFloorPanel();
 
@@ -18,6 +19,7 @@ void initElevator()
     initOrtState();
     initBookings();
     initLights();
+    resetTimer();
     printf("=== Example Program ===\n");
     printf("=== Example Program ===\n");
     printf("Press the stop button on the elevator panel to exit\n");
@@ -33,34 +35,110 @@ Trigger entryState(void)
     initElevator();
     return reachedFloor;
 }
-
+//Lag open door state, løser jeg vil inn i heisen igjen og party lys
 Trigger stopFloorState(void)
 {
-    //openDoor() hvis dør ikke åpen
-    //checkOstruction()
-    //checkStop()
-    //closeDoor(if 3 sec and no bestilling);
-    //if (doorClosed())
-        //hent ny bestilling
-        //Oppdater bestillinger
+    updateTimer();
     updateFloorPanel();
+    int floor = getFloor();
+    int direction = getDirection();
 
-        //oppdater retning om nødvendig
-        //return move
+    setDoorLight();
+
+    if (isStopPressed())
+    {
+        setStopLamp();
+        clearAllBookings();
+        clearAllButtonLamps();
+    }
+    else
+    {
+        clearStopLamp();
+    }
+
+    if (isObstructed() || isStopPressed())
+    {
+        resetTimer();
+        return stop;
+    }
+    else if (checkTimer(1000))
+    {
+        clearDoorLight();
+    }
+    else
+    {
+        return stop;
+    }
+    //Oppdater bestillinger
+    //Sletter bestilling i etasjen (så lenge døra er åpen)
+    clearButtonLamps(floor);
+    clearBooking(floor);
+    if (getNextDestination(floor, direction) != NO_BOOKINGS)
+    {
+        resetTimer();
+        return motion;
+    }
     return stop;
     
 
 }
 Trigger movingState(void)
 {
-    //finn bov) return stop;
+    int floor = getFloor();
+    int lastFloor = getLastFloor();
+    int direction = getDirection();
+    int nextFloor = getNextDestination(lastFloor, direction);
+
+    updateLastFloor();
+    updateFloorPanel();
+
+    if (isStopPressed())
+    {
+        move(NONE);
+        return stop;
+    }
+    
+    if (nextFloor < lastFloor)
+    {
+        setDirection(DOWN);
+    }
+    if (nextFloor > lastFloor)
+    {
+        setDirection(UP);
+    }
+    if(nextFloor == floor)
+    {
+        move(NONE);
+        return reachedFloor;
+    }
+    move(getDirection());
     return motion;
 }
 Trigger stopBetweenState(void)
 {
-    clearAllLevels();
-    //if (booking & !stop) return move;
-    return stop;
+    if (isStopPressed())
+    {
+        setStopLamp();
+        clearAllBookings();
+        clearAllButtonLamps();
+        return stop;
+    }
+    clearStopLamp();
+    updateFloorPanel();
+    //wait for next booking
+    int lastFloor = getLastFloor();
+    int direction = getDirection();
+    int nextFloor = getNextDestination(lastFloor, direction);
+
+    if (nextFloor == NO_BOOKINGS)
+    {
+        return stop;
+    }
+    if (nextFloor == lastFloor)
+    {
+        swapDirection();
+    }
+    return motion;
 }
 
 static Trigger (* state[])(void) = {
@@ -177,13 +255,13 @@ void runElevator()
         currentState = lookupTransitions(currentState, trig);
         
         //midlertidig exit
-        if(elevio_stopButton())
+        /*if(elevio_stopButton())
         {
             move(NONE);
             elevio_stopLamp(1);
             break;
-        }
-        nanosleep(&(struct timespec){0, 20*1000*1000}, NULL); //Funker uten nanosleep
+        }*/
+        sleep();
     }
 }
 
@@ -193,13 +271,14 @@ void updateFloorPanel()
     {
         for (int dir = 0; dir < NUM_DIRECTIONS; dir++)
         {
-            if (getButtonValue(floor, dir))
+            if (isButtonPressed(floor, dir))
             {
-                setButtonlamp(floor, dir, true);
+                setButtonLamp(floor, dir);
                 setBooking(floor, dir);
             }
         }
         
     }
+    setFloorIndicator(getLastFloor());
     
 }

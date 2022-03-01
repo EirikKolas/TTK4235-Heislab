@@ -1,10 +1,10 @@
 #pragma once
 #include "elevatorEnums.h"
 
+#define NO_BOOKINGS -1
+
 void initBookings();
-void clearLevel();
-void clearAllLevels();
-void checkBookings();
+void clearBooking(int floor);
+void clearAllBookings();
 void setBooking(int floor, Direction dir);
 int getNextDestination(int currentFloor, Direction dir);
-void swapDirection();

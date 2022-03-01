@@ -2,6 +2,13 @@
 #include "elevatorEnums.h"
 
 void initLights();
-void activateButtonLamps();
-void deactivateButtonLamps(int floor);
-void setButtonlamp(int floor, Direction dir, bool value);
+void clearButtonLamps(int floor);
+void setButtonLamp(int floor, Direction dir);
+void clearAllButtonLamps();
+void setFloorIndicator(int floor);
+
+void setDoorLight();
+void clearDoorLight();
+
+void setStopLamp();
+void clearStopLamp();

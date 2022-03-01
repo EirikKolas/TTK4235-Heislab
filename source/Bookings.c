@@ -5,7 +5,9 @@
 #include <assert.h>
 #include <stdio.h>
 
-int directionToInt(Direction dir);
+int dirToInt(Direction dir);
+#define TOP_FLOOR (N_FLOORS -1)
+#define GROUND_FLOOR 0
 
 typedef struct Level
 {
@@ -17,10 +19,10 @@ static Level levels[N_FLOORS];
 
 void initBookings()
 {
-    clearAllLevels();
+    clearAllBookings();
 }
 
-void clearLevel(int floor)
+void clearBooking(int floor)
 {
     assert(floor >= 0);
     assert(floor < N_FLOORS);
@@ -28,15 +30,16 @@ void clearLevel(int floor)
     levels[floor].down = false;
 }
 
-void clearAllLevels()
+void clearAllBookings()
 {
     for (int floor = 0; floor < N_FLOORS; floor++)
     {
-        clearLevel(floor);
+        clearBooking(floor);
     }
 }
 
 //Veldig dårlig kode
+/*
 void checkBookings()
 {
     // Les av knapper og legg inn booking
@@ -50,7 +53,7 @@ void checkBookings()
             }
         }
     }
-}
+}*/
 
 void setBooking(int floor, Direction dir)
 {
@@ -135,21 +138,21 @@ bool checkFloorBooking(int floor, Direction dir)
 int getNextDestination(int currentFloor, Direction dir)
 {
     assert(dir != NONE);
-    // if (checkFloorBooking(currentFloor, dir))
-    // {
-    //     return currentFloor;
-    // } Sletter ikke sin egen booking dersom det er flere bookings
-    
+    int floor = currentFloor;
 
-    if (((currentFloor >= N_FLOORS-2) && (dir == UP)) || ((currentFloor<=1) && (dir==DOWN)))
+    // Øverste og nederste etasje har bare en retning
+    if (currentFloor == TOP_FLOOR)
     {
-        dir = dir == UP ? DOWN : UP; //bytter retning hvis øverst eller nederst
+        dir = DOWN;
     }
-    int floor = currentFloor + dirToInt(dir); //begynner å sjekke fra etasjen over/under
+    else if (currentFloor == GROUND_FLOOR)
+    {
+        dir = UP;
+    }
+
     Direction originalDir = dir;
 
-
-    while (!(floor == currentFloor && dir == originalDir))
+    do
     {
         if(checkFloorBooking(floor,dir))
         {
@@ -158,12 +161,12 @@ int getNextDestination(int currentFloor, Direction dir)
 
         floor += dirToInt(dir);
 
-        if (floor == N_FLOORS-1 || floor == 0)
+        if (floor == TOP_FLOOR || floor == GROUND_FLOOR)
         {
-            dir = dir == UP ? DOWN : UP;
+            dir = dir == UP ? DOWN : UP;    //endrer retning dersom vi når øverste eller nederste etasje
         }
 
-    }
+    }while(!(currentFloor==floor && originalDir == dir));
 
 /*
     switch (dir)
@@ -193,7 +196,7 @@ int getNextDestination(int currentFloor, Direction dir)
         break;
     }
 */
-    return currentFloor;
+    return NO_BOOKINGS;
 }
 
 

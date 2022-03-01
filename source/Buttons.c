@@ -1,7 +1,7 @@
 #include "Buttons.h"
 #include "driver/elevio.h"
 
-bool getButtonValue(int floor, Direction dir)
+bool isButtonPressed(int floor, Direction dir)
 {
     switch (dir)
     {
@@ -14,5 +14,15 @@ bool getButtonValue(int floor, Direction dir)
     default:
         break;
     }
+}
+
+bool isObstructed()
+{
+    return elevio_obstruction();
+}
+
+bool isStopPressed()
+{
+    return elevio_stopButton();
 }
 

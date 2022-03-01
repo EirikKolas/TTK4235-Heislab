@@ -2,11 +2,12 @@
 #include "elevatorEnums.h"
 
 int getLastFloor();
-Action getAction();
+int getFloor();
+
 Direction getDirection();
 
 void updateLastFloor();
 void setDirection(Direction dir);
-void setAction(Action a);
 
 void initOrtState();
+void swapDirection();
