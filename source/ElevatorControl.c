@@ -14,7 +14,7 @@ void initElevator()
     initBookings();
     initLights();
     resetTimer();
-    printf("=== Oskar er pen ===\n");
+    printf("=== Oskar er kjempepen ===\n");
 }
 
 
