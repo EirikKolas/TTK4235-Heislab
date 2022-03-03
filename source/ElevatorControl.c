@@ -14,7 +14,7 @@ void initElevator()
     initBookings();
     initLights();
     resetTimer();
-    printf("=== Oskar er kjempepen ===\n");
+    printf("=== Oskar er ikke pen ===\n");
 }
 
 
@@ -94,13 +94,14 @@ Trigger stopFloorState(void)
 }
 Trigger movingState(void)
 {
+    updateFloorPanel();
+    
     int floor = getFloor();
     int lastFloor = getLastFloor();
     int direction = getDirection();
     int nextFloor = getNextDestination(lastFloor, direction);
 
     updateLastFloor();
-    updateFloorPanel();
 
     if (isStopPressed())
     {
