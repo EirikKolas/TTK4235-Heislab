@@ -14,5 +14,4 @@ Direction getDirection();
 void updateLastFloor();
 void setDirection(Direction dir);
 
-void initOrtState();
 void swapDirection();

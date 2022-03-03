@@ -11,13 +11,10 @@ void updateFloorPanel();
 void initElevator()
 {
     initMotor();
-    initOrtState();
     initBookings();
     initLights();
     resetTimer();
-    printf("=== Example Program ===\n");
-    printf("=== Example Program ===\n");
-    printf("Press the stop button on the elevator panel to exit\n");
+    printf("=== Oskar er pen ===\n");
 }
 
 
@@ -25,9 +22,15 @@ typedef enum StateCodes {entry, stopFloor, moving, stopBetween, doorOpen} StateC
 typedef enum Trigger {motion, stop, reachedFloor} Trigger;
 
 
-Trigger entryState(void) 
+Trigger entryState(void)
 {
-    initElevator();
+    if (getFloor() == -1)
+    {
+        move(DOWN);
+        return motion;
+    }
+    move(NONE);
+    updateLastFloor();
     return reachedFloor;
 }
 
@@ -58,7 +61,7 @@ Trigger doorOpenState()
         resetTimer();
         return stop;
     }
-    
+
     if (checkTimer(1000))
     {
         clearDoorLight();
@@ -86,7 +89,7 @@ Trigger stopFloorState(void)
         return motion;
     }
     return reachedFloor;
-    
+
 
 }
 Trigger movingState(void)
@@ -104,7 +107,7 @@ Trigger movingState(void)
         move(NONE);
         return stop;
     }
-    
+
     if (nextFloor < lastFloor)
     {
         setDirection(DOWN);
@@ -150,9 +153,9 @@ Trigger stopBetweenState(void)
 
 
 static Trigger (* state[])(void) = {
-    entryState, 
-    stopFloorState, 
-    movingState, 
+    entryState,
+    stopFloorState,
+    movingState,
     stopBetweenState,
     doorOpenState
 };
@@ -168,6 +171,7 @@ struct Transition
 static struct Transition stateTransitions[] =
 {
     {entry,       reachedFloor, stopFloor},
+    {entry,       motion,       entry},
     {stopFloor,   motion,       moving},
     {stopFloor,   stop,         doorOpen},
     {stopFloor,   reachedFloor, stopFloor},
@@ -187,15 +191,17 @@ StateCodes lookupTransitions(StateCodes s, Trigger t)
         if (stateTransitions[i].currentState == s && stateTransitions[i].trig == t)
         {
             return stateTransitions[i].destinationState;
-        }  
+        }
     }
     return s;
 }
 
 //https://stackoverflow.com/questions/1371460/state-machines-tutorials/1371829
 
-void runElevator() 
+void runElevator()
 {
+    initElevator();
+
     StateCodes currentState = entry;
     Trigger trig;
     Trigger (* stateFunction)(void);
@@ -205,7 +211,7 @@ void runElevator()
         stateFunction = state[currentState];
         trig = stateFunction();
         currentState = lookupTransitions(currentState, trig);
-        
+
         //midlertidig exit
         /*if(elevio_stopButton())
         {
@@ -229,8 +235,8 @@ void updateFloorPanel()
                 setBooking(floor, dir);
             }
         }
-        
+
     }
     setFloorIndicator(getLastFloor());
-    
+
 }

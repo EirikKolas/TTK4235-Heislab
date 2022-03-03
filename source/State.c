@@ -10,15 +10,7 @@ typedef struct OrtState {
 
 static OrtState t = {-1,DOWN};
 
-
-void initOrtState()
-{
-    //setAction(STOP_FLOOR);
-    updateLastFloor();
-    return;
-}
-
-void updateLastFloor() 
+void updateLastFloor()
 {
     int floor = elevio_floorSensor();
     if (floor != -1){
