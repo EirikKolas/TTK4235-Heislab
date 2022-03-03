@@ -166,36 +166,8 @@ int getNextDestination(int currentFloor, Direction dir)
             dir = dir == UP ? DOWN : UP;    //endrer retning dersom vi når øverste eller nederste etasje
         }
 
-    } while( !(currentFloor==floor && originalDir == dir));
+    } while( !(currentFloor==floor && originalDir == dir) );
 
-/*
-    switch (dir)
-    {
-    case UP:
-        for (int i = currentFloor+1; i < N_FLOORS; i++)
-        {
-            if (levels[i].up)
-            {
-                return i;
-            }
-        }
-        
-        break;
-    case DOWN:
-        for (int i = currentFloor-1; i >= 0; i--)
-        {
-            if (levels[i].down)
-            {
-                return i;
-            }
-        }
-        break;
-    case NONE:
-        break;
-    default:
-        break;
-    }
-*/
     return NO_BOOKINGS;
 }
 
