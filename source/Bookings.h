@@ -1,5 +1,10 @@
+/**
+* @file
+* @brief Module for handling elevator bookings
+*/
+
 #pragma once
-#include "elevatorEnums.h"
+#include "ElevatorEnums.h"
 
 #define NO_BOOKINGS -1
 

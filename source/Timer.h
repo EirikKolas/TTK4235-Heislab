@@ -1,3 +1,8 @@
+/**
+* @file
+* @brief Simple timer logic
+*/
+
 #pragma once
 
 void updateTimer();

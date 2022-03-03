@@ -2,15 +2,15 @@
 #include <stdbool.h>
 
 static int msTimer = 0;
-
+#define msInterval 20
 void sleep()
 {
-    nanosleep(&(struct timespec){0, 20*1000*1000}, NULL);
+    nanosleep(&(struct timespec){0, msInterval*1000*1000}, NULL);
 }
 
 void updateTimer()
 {
-    msTimer += 20; //milliseconds
+    msTimer += msInterval; //milliseconds
 }
 
 void resetTimer()

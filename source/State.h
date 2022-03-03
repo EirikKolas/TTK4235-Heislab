@@ -1,5 +1,10 @@
+/**
+* @file
+* @brief Logic for storing the direction and the location of the elevator
+*/
+
 #pragma once
-#include "elevatorEnums.h"
+#include "ElevatorEnums.h"
 
 int getLastFloor();
 int getFloor();

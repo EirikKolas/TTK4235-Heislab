@@ -1,0 +1,36 @@
+digraph "source/ElevatorEnums.h"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node1 [label="source/ElevatorEnums.h",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Useful global defines."];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node2 [label="source/Bookings.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$Bookings_8h.html",tooltip="Module for handling elevator bookings."];
+  Node2 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node3 [label="source/Bookings.c",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$Bookings_8c_source.html",tooltip=" "];
+  Node2 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node4 [label="source/ElevatorControl.c",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$ElevatorControl_8c_source.html",tooltip=" "];
+  Node1 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node1 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node5 [label="source/Buttons.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$Buttons_8h.html",tooltip="Simple interface for checking elevator buttons."];
+  Node5 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node6 [label="source/Buttons.c",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$Buttons_8c_source.html",tooltip=" "];
+  Node5 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node1 -> Node7 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node7 [label="source/State.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$State_8h.html",tooltip="Logic for storing the direction and the location of the elevator."];
+  Node7 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node7 -> Node8 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node8 [label="source/Motor.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$Motor_8h.html",tooltip="Simple interface for operating the elevator motor."];
+  Node8 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node8 -> Node9 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node9 [label="source/Motor.c",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$Motor_8c_source.html",tooltip=" "];
+  Node7 -> Node10 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node10 [label="source/State.c",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$State_8c_source.html",tooltip=" "];
+  Node1 -> Node11 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node11 [label="source/Lights.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$Lights_8h.html",tooltip="Module for updating elevator lights."];
+  Node11 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node11 -> Node12 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node12 [label="source/Lights.c",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$Lights_8c_source.html",tooltip=" "];
+  Node1 -> Node13 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node13 [label="source/ElevatorEnums.c",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$ElevatorEnums_8c_source.html",tooltip=" "];
+}

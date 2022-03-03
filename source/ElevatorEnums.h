@@ -1,14 +1,11 @@
+/**
+* @file
+* @brief Useful global defines
+*/
+
 #pragma once
 #include <stdbool.h>
 
-/*
-typedef enum
-{
-    MOVING = 0,
-    STOP_FLOOR = 1,
-    STOP_BETWEEN = 2
-} Action;
-*/
 #define NUM_DIRECTIONS 3
 
 typedef enum

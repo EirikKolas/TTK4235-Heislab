@@ -1,4 +1,4 @@
-#include "elevatorEnums.h"
+#include "ElevatorEnums.h"
 #include "driver/elevio.h"
 
 int numFloors()

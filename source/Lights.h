@@ -1,5 +1,10 @@
+/**
+* @file
+* @brief Module for updating elevator lights
+*/
+
 #pragma once
-#include "elevatorEnums.h"
+#include "ElevatorEnums.h"
 
 void initLights();
 void clearButtonLamps(int floor);

@@ -1,8 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <signal.h>
-#include <time.h>
-#include "driver/elevio.h"              //Skal fjernes
 #include "ElevatorControl.h"
 #include "State.h"
 #include "Motor.h"
@@ -26,7 +21,7 @@ void initElevator()
 }
 
 
-typedef enum StateCodes {entry, stopFloor, moving, stopBetween} StateCodes;
+typedef enum StateCodes {entry, stopFloor, moving, stopBetween, doorOpen} StateCodes;
 typedef enum Trigger {motion, stop, reachedFloor} Trigger;
 
 
@@ -35,50 +30,62 @@ Trigger entryState(void)
     initElevator();
     return reachedFloor;
 }
-//Lag open door state, løser jeg vil inn i heisen igjen og party lys
-Trigger stopFloorState(void)
-{
-    updateTimer();
-    updateFloorPanel();
-    int floor = getFloor();
-    int direction = getDirection();
 
+
+Trigger doorOpenState()
+{
+    updateFloorPanel();
     setDoorLight();
+    updateTimer();
+
+    int floor = getFloor();
+    clearButtonLamps(floor);
+    clearBooking(floor);
+
 
     if (isStopPressed())
     {
         setStopLamp();
         clearAllBookings();
         clearAllButtonLamps();
+        resetTimer();
+        return stop;
     }
-    else
-    {
-        clearStopLamp();
-    }
+    clearStopLamp();
 
-    if (isObstructed() || isStopPressed())
+    if (isObstructed())
     {
         resetTimer();
         return stop;
     }
-    else if (checkTimer(1000))
+    
+    if (checkTimer(1000))
     {
         clearDoorLight();
+        resetTimer();
+        return reachedFloor;
     }
-    else
+    return stop;
+}
+
+
+Trigger stopFloorState(void)
+{
+    updateFloorPanel();
+    int floor = getFloor();
+    int direction = getDirection();
+
+    if (isStopPressed())
     {
         return stop;
     }
     //Oppdater bestillinger
     //Sletter bestilling i etasjen (så lenge døra er åpen)
-    clearButtonLamps(floor);
-    clearBooking(floor);
     if (getNextDestination(floor, direction) != NO_BOOKINGS)
     {
-        resetTimer();
         return motion;
     }
-    return stop;
+    return reachedFloor;
     
 
 }
@@ -116,6 +123,7 @@ Trigger movingState(void)
 }
 Trigger stopBetweenState(void)
 {
+    updateFloorPanel();
     if (isStopPressed())
     {
         setStopLamp();
@@ -124,7 +132,6 @@ Trigger stopBetweenState(void)
         return stop;
     }
     clearStopLamp();
-    updateFloorPanel();
     //wait for next booking
     int lastFloor = getLastFloor();
     int direction = getDirection();
@@ -141,11 +148,13 @@ Trigger stopBetweenState(void)
     return motion;
 }
 
+
 static Trigger (* state[])(void) = {
     entryState, 
     stopFloorState, 
     movingState, 
-    stopBetweenState
+    stopBetweenState,
+    doorOpenState
 };
 
 
@@ -160,12 +169,15 @@ static struct Transition stateTransitions[] =
 {
     {entry,       reachedFloor, stopFloor},
     {stopFloor,   motion,       moving},
-    {stopFloor,   stop,         stopFloor},
+    {stopFloor,   stop,         doorOpen},
+    {stopFloor,   reachedFloor, stopFloor},
     {moving,      stop,         stopBetween},
     {moving,      motion,       moving},
-    {moving,      reachedFloor, stopFloor},
+    {moving,      reachedFloor, doorOpen},
     {stopBetween, motion,       moving},
-    {stopBetween, stop,         stopBetween}
+    {stopBetween, stop,         stopBetween},
+    {doorOpen,    stop,         doorOpen},
+    {doorOpen,    reachedFloor, stopFloor}
 };
 
 StateCodes lookupTransitions(StateCodes s, Trigger t)
@@ -184,66 +196,6 @@ StateCodes lookupTransitions(StateCodes s, Trigger t)
 
 void runElevator() 
 {
-    //updateLastFloor();
-    //int floor = getLastFloor();
-    //int nextFloor = getNextDestination(floor,getDirection());
-/*
-    while(1)
-    {
-    //Check og print floor
-        updateLastFloor();
-        floor = getLastFloor();
-        elevio_floorIndicator(floor);       // må være initiert (dvs ikke -1)
-        //printf("floor: %d \n",floor);
-
-    //Oppdater bestillinger
-        checkBookings();
-        printf("next floor: %d \n",nextFloor);
-
-    //Bevegelse til etasjer
-        if(floor == nextFloor){
-            move(NONE);
-            clearLevel(floor);
-            nextFloor = getNextDestination(floor,getDirection());
-        }
-
-        if(floor < nextFloor){
-            move(UP);
-            printf("Up: %d \n",UP);
-            setDirection(UP);
-        }
-
-        if(floor > nextFloor){
-            move(DOWN);
-            printf("Down: %d \n",DOWN);
-            setDirection(DOWN);
-        }
-
-    //Les av knapper og slå på lys
-        activateButtonLamps();
-        deactivateButtonLamps(floor);       // legg til if setning, getAction == stop_floor
-        
-    //Sjekk obstruction og stopknapp    STOP = 2
-        if (elevio_obstruction())
-        {
-            elevio_stopLamp(1);
-        }
-        else
-        {
-            elevio_stopLamp(0);
-        }
-        
-        if(elevio_stopButton()){
-            move(NONE);
-            elevio_stopLamp(1);
-            break;
-        }
-
-        nanosleep(&(struct timespec){0, 20*1000*1000}, NULL);
-    }
-*/
-
-
     StateCodes currentState = entry;
     Trigger trig;
     Trigger (* stateFunction)(void);
