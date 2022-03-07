@@ -41,9 +41,9 @@ Trigger doorOpenState()
     setDoorLight();
     updateTimer();
 
-    int floor = getFloor();
-    clearButtonLamps(floor);
-    clearBooking(floor);
+    int lastFloor = getLastFloor();
+    clearButtonLamps(lastFloor);
+    clearBooking(lastFloor);
 
 
     if (isStopPressed())
@@ -71,12 +71,9 @@ Trigger doorOpenState()
     return stop;
 }
 
-
 Trigger stopFloorState(void)
 {
     updateFloorPanel();
-    int floor = getFloor();
-    int direction = getDirection();
 
     if (isStopPressed())
     {
@@ -84,7 +81,7 @@ Trigger stopFloorState(void)
     }
     //Oppdater bestillinger
     //Sletter bestilling i etasjen (så lenge døra er åpen)
-    if (getNextDestination(floor, direction) != NO_BOOKINGS)
+    if (getNextDestination(getLastFloor(), getDirection()) != NO_BOOKINGS)
     {
         return motion;
     }
@@ -92,15 +89,17 @@ Trigger stopFloorState(void)
 
 
 }
+
 Trigger movingState(void)
 {
+    updateFloorPanel();
+    updateLastFloor();
+
     int floor = getFloor();
     int lastFloor = getLastFloor();
     int direction = getDirection();
     int nextFloor = getNextDestination(lastFloor, direction);
 
-    updateLastFloor();
-    updateFloorPanel();
 
     if (isStopPressed())
     {
@@ -124,6 +123,7 @@ Trigger movingState(void)
     move(getDirection());
     return motion;
 }
+
 Trigger stopBetweenState(void)
 {
     updateFloorPanel();
@@ -150,7 +150,6 @@ Trigger stopBetweenState(void)
     }
     return motion;
 }
-
 
 static Trigger (* state[])(void) = {
     entryState,
@@ -196,7 +195,6 @@ StateCodes lookupTransitions(StateCodes s, Trigger t)
     return s;
 }
 
-//https://stackoverflow.com/questions/1371460/state-machines-tutorials/1371829
 
 void runElevator()
 {
@@ -212,13 +210,6 @@ void runElevator()
         trig = stateFunction();
         currentState = lookupTransitions(currentState, trig);
 
-        //midlertidig exit
-        /*if(elevio_stopButton())
-        {
-            move(NONE);
-            elevio_stopLamp(1);
-            break;
-        }*/
         sleep();
     }
 }
@@ -235,8 +226,9 @@ void updateFloorPanel()
                 setBooking(floor, dir);
             }
         }
-
     }
     setFloorIndicator(getLastFloor());
-
 }
+
+
+//https://stackoverflow.com/questions/1371460/state-machines-tutorials/1371829

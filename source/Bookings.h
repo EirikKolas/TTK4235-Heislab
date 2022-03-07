@@ -12,4 +12,4 @@ void initBookings();
 void clearBooking(int floor);
 void clearAllBookings();
 void setBooking(int floor, Direction dir);
-int getNextDestination(int currentFloor, Direction dir);
+int  getNextDestination(int currentFloor, Direction dir);
