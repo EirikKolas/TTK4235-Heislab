@@ -1,8 +1,10 @@
 #include <time.h>
 #include <stdbool.h>
 
-static int msTimer = 0;
 #define msInterval 20
+
+static int msTimer = 0;
+
 void sleep()
 {
     nanosleep(&(struct timespec){0, msInterval*1000*1000}, NULL);

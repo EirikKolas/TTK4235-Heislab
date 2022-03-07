@@ -120,6 +120,15 @@ Trigger movingState(void)
         move(NONE);
         return reachedFloor;
     }
+    if (nextFloor == lastFloor)
+    {
+        // Om destinasjonen er forrige etasje, må heisen gå i motsatt retning
+        swapDirection();
+        move(getDirection());
+        swapDirection();
+        return motion;
+    }
+
     move(getDirection());
     return motion;
 }
@@ -144,10 +153,7 @@ Trigger stopBetweenState(void)
     {
         return stop;
     }
-    if (nextFloor == lastFloor)
-    {
-        swapDirection();
-    }
+
     return motion;
 }
 
