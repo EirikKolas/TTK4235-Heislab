@@ -2,6 +2,8 @@ build/
 html/
 latex/
 
+elevator
+
 .vscode/*
 !.vscode
 !.vscode/launch.json
