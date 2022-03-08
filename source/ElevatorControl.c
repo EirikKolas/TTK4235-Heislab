@@ -37,14 +37,7 @@ Trigger entryState(void)
 
 Trigger doorOpenState()
 {
-    updateFloorPanel();
     setDoorLight();
-    updateTimer();
-
-    int lastFloor = getLastFloor();
-    clearButtonLamps(lastFloor);
-    clearBooking(lastFloor);
-
 
     if (isStopPressed())
     {
@@ -54,6 +47,11 @@ Trigger doorOpenState()
         resetTimer();
         return stop;
     }
+    updateFloorPanel();
+
+    int lastFloor = getLastFloor();
+    clearButtonLamps(lastFloor);
+    clearBooking(lastFloor);
     clearStopLamp();
 
     if (isObstructed())
@@ -62,7 +60,7 @@ Trigger doorOpenState()
         return stop;
     }
 
-    if (checkTimer(1000))
+    if (checkTimer(3))
     {
         clearDoorLight();
         resetTimer();
@@ -73,12 +71,12 @@ Trigger doorOpenState()
 
 Trigger stopFloorState(void)
 {
-    updateFloorPanel();
-
     if (isStopPressed())
     {
         return stop;
     }
+    updateFloorPanel();
+
     //Oppdater bestillinger
     //Sletter bestilling i etasjen (så lenge døra er åpen)
     if (getNextDestination(getLastFloor(), getDirection()) != NO_BOOKINGS)
@@ -118,8 +116,10 @@ Trigger movingState(void)
     if(nextFloor == floor)
     {
         move(NONE);
+        resetTimer();
         return reachedFloor;
     }
+    /*
     if (nextFloor == lastFloor)
     {
         // Om destinasjonen er forrige etasje, må heisen gå i motsatt retning
@@ -127,7 +127,7 @@ Trigger movingState(void)
         move(getDirection());
         swapDirection();
         return motion;
-    }
+    }*/
 
     move(getDirection());
     return motion;
@@ -135,7 +135,6 @@ Trigger movingState(void)
 
 Trigger stopBetweenState(void)
 {
-    updateFloorPanel();
     if (isStopPressed())
     {
         setStopLamp();
@@ -144,6 +143,7 @@ Trigger stopBetweenState(void)
         return stop;
     }
     clearStopLamp();
+    updateFloorPanel();
     //wait for next booking
     int lastFloor = getLastFloor();
     int direction = getDirection();
@@ -216,7 +216,6 @@ void runElevator()
         trig = stateFunction();
         currentState = lookupTransitions(currentState, trig);
 
-        sleep();
     }
 }
 

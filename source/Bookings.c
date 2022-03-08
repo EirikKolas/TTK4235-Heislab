@@ -158,7 +158,7 @@ int getNextDestination(int currentFloor, Direction dir)
         {
             return floor;
         }
-
+        
         floor += dirToInt(dir);
 
         if (floor == TOP_FLOOR || floor == GROUND_FLOOR)
@@ -166,7 +166,8 @@ int getNextDestination(int currentFloor, Direction dir)
             dir = dir == UP ? DOWN : UP;    //endrer retning dersom vi når øverste eller nederste etasje
         }
 
-    }while(!(currentFloor==floor && originalDir == dir));
+
+    } while (!(currentFloor==floor && originalDir == dir));
 
 /*
     switch (dir)
