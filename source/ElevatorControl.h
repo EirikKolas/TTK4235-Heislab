@@ -6,11 +6,11 @@
 #pragma once
 
 /**
-* @brief Sets up the elevator systems
+* @brief Initializes the elevator systems.
 */
 void initElevator();
 
 /**
-* @brief Runs the elevator
+* @brief Runs the elevator.
 */
 void runElevator();

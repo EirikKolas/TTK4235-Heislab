@@ -13,7 +13,7 @@
 void initLights();
 
 /**
-* @brief Clears all the button lamps at a specific floor.
+* @brief Clears all the button lamps at a specific @p floor.
 *
 * @param[in] floor Elevator floor where the buttons are located.
 */
@@ -34,7 +34,7 @@ void setButtonLamp(int floor, Direction dir);
 void clearAllButtonLamps();
 
 /**
-* @brief Turns on the floor indicator lamp at the floor where the elevator is.
+* @brief Turns on the floor indicator lamp at the @p floor where the elevator is.
 *
 * @param[in] floor Elevator floor where the lamp is to be turned on.
 */

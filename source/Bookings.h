@@ -1,6 +1,6 @@
 /**
 * @file
-* @brief Module for handling elevator bookings
+* @brief Module for handling elevator bookings.
 */
 
 #pragma once
@@ -14,7 +14,7 @@
 void initBookings();
 
 /**
-* @brief Clears all bookings at a specific floor.
+* @brief Clears all bookings at a specific @p floor .
 *
 * @param[in] floor Elevator floor where the bookings are to be cleared.
 */
@@ -26,7 +26,7 @@ void clearBooking(int floor);
 void clearAllBookings();
 
 /**
-* @brief Sets an active booking with a direction on a specific floor
+* @brief Sets an active booking with a direction @p dir on a specific floor @p floor .
 *
 * @param[in] floor Elevator floor where the booking is set.
 * @param[in] dir Direction of the booking.
@@ -34,11 +34,11 @@ void clearAllBookings();
 void setBooking(int floor, Direction dir);
 
 /**
-* @brief Calculates the next destination from all the active bookings based on the elevator's current floor and direction.
+* @brief Calculates the next destination from all the active bookings based on the elevator's current floor @p currentFloor and direction @p dir .
 *
 * @param[in] currentFloor Floor where the elevator is located.
 * @param[in] dir Direction of the elevator.
 *
-* @return the next floor
+* @return the next floor.
 */
 int  getNextDestination(int currentFloor, Direction dir);
