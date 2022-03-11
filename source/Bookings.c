@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include "driver/elevio.h"
 #include <assert.h>
-#include <stdio.h>
+// #include <stdio.h>
 
 int dirToInt(Direction dir);
 #define TOP_FLOOR (N_FLOORS -1)
@@ -37,23 +37,6 @@ void clearAllBookings()
         clearBooking(floor);
     }
 }
-
-//Veldig dårlig kode
-/*
-void checkBookings()
-{
-    // Les av knapper og legg inn booking
-    for (int f = 0; f < N_FLOORS; f++)
-    {
-        for (int b = 0; b < N_BUTTONS; b++)
-        {
-            if (elevio_callButton(f, b) == 1) // enten 0 eller 1
-            {
-                setBooking(f,b);
-            }
-        }
-    }
-}*/
 
 void setBooking(int floor, Direction dir)
 {
@@ -102,39 +85,6 @@ bool checkFloorBooking(int floor, Direction dir)
     return false;
 }
 
-/*bool checkNextDestination(int currentFloor, Direction dir)
-{
-    switch (dir)
-    {
-    case UP:
-        for (int i = currentFloor +1; i < N_FLOORS; i++)
-        {
-            if (levels[i].up)
-            {
-                return true;
-            }
-        }
-        
-        break;
-    case DOWN:
-        for (int i = currentFloor -1; i >= 0; i--)
-        {
-            if (levels[i].down)
-            {
-                return true;
-            }
-        }
-        break;
-    case NONE:
-        return false;
-        break;
-    default:
-        break;
-    }
-    return false;
-}
-*/
-
 int getNextDestination(int currentFloor, Direction dir)
 {
     assert(dir != NONE);
@@ -158,7 +108,7 @@ int getNextDestination(int currentFloor, Direction dir)
         {
             return floor;
         }
-        
+
         floor += dirToInt(dir);
 
         if (floor == TOP_FLOOR || floor == GROUND_FLOOR)
@@ -169,34 +119,7 @@ int getNextDestination(int currentFloor, Direction dir)
 
     } while (!(currentFloor==floor && originalDir == dir));
 
-/*
-    switch (dir)
-    {
-    case UP:
-        for (int i = currentFloor+1; i < N_FLOORS; i++)
-        {
-            if (levels[i].up)
-            {
-                return i;
-            }
-        }
-        
-        break;
-    case DOWN:
-        for (int i = currentFloor-1; i >= 0; i--)
-        {
-            if (levels[i].down)
-            {
-                return i;
-            }
-        }
-        break;
-    case NONE:
-        break;
-    default:
-        break;
-    }
-*/
+
     return NO_BOOKINGS;
 }
 

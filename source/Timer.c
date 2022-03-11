@@ -12,7 +12,6 @@ void resetTimer()
 bool checkTimer(int seconds)
 {
     return (time(NULL)-timeRef >= seconds);
-    
 }
 
 // https://stackoverflow.com/questions/17167949/how-to-use-timer-in-c

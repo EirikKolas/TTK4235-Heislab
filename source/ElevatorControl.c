@@ -14,7 +14,6 @@ void initElevator()
     initBookings();
     initLights();
     resetTimer();
-    printf("=== Oskar er ikke pen ===\n");
 }
 
 
