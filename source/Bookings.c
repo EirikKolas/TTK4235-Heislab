@@ -9,11 +9,13 @@ int dirToInt(Direction dir);
 #define TOP_FLOOR (N_FLOORS -1)
 #define GROUND_FLOOR 0
 
+
 typedef struct Level
 {
     bool up;
     bool down;
 } Level;
+
 
 static Level levels[N_FLOORS];
 
