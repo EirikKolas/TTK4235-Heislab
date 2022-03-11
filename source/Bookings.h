@@ -26,7 +26,7 @@ void clearBooking(int floor);
 void clearAllBookings();
 
 /**
-* @brief Sets an active booking with a direction @p dir on a specific floor @p floor .
+* @brief Sets an active booking with a direction @p dir on a specific @p floor .
 *
 * @param[in] floor Elevator floor where the booking is set.
 * @param[in] dir Direction of the booking.
@@ -34,11 +34,11 @@ void clearAllBookings();
 void setBooking(int floor, Direction dir);
 
 /**
-* @brief Calculates the next destination from all the active bookings based on the elevator's current floor @p currentFloor and direction @p dir .
+* @brief Calculates the next destination from all the active bookings based on the elevator's @p lastFloor and direction @p dir .
 *
-* @param[in] currentFloor Floor where the elevator is located.
+* @param[in] lastFloor Floor where the elevator is located.
 * @param[in] dir Direction of the elevator.
 *
 * @return the next floor.
 */
-int  getNextDestination(int currentFloor, Direction dir);
+int  getNextDestination(int lastFloor, Direction dir);
