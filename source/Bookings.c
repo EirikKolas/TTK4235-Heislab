@@ -9,11 +9,13 @@ int dirToInt(Direction dir);
 #define TOP_FLOOR (N_FLOORS -1)
 #define GROUND_FLOOR 0
 
+
 typedef struct Level
 {
     bool up;
     bool down;
 } Level;
+
 
 static Level levels[N_FLOORS];
 
@@ -85,17 +87,17 @@ bool checkFloorBooking(int floor, Direction dir)
     return false;
 }
 
-int getNextDestination(int currentFloor, Direction dir)
+int getNextDestination(int lastFloor, Direction dir)
 {
     assert(dir != NONE);
-    int floor = currentFloor;
+    int floor = lastFloor;
 
     // Øverste og nederste etasje har bare en retning
-    if (currentFloor == TOP_FLOOR)
+    if (lastFloor == TOP_FLOOR)
     {
         dir = DOWN;
     }
-    else if (currentFloor == GROUND_FLOOR)
+    else if (lastFloor == GROUND_FLOOR)
     {
         dir = UP;
     }
@@ -117,7 +119,7 @@ int getNextDestination(int currentFloor, Direction dir)
         }
 
 
-    } while (!(currentFloor==floor && originalDir == dir));
+    } while (!(lastFloor==floor && originalDir == dir));
 
 
     return NO_BOOKINGS;
