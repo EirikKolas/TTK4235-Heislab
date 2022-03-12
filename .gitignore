@@ -1,0 +1,10 @@
+build/
+html/
+latex/
+
+elevator
+
+.vscode/*
+!.vscode
+!.vscode/launch.json
+!.vscode/tasks.json

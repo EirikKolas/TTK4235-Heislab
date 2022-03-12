@@ -39,7 +39,7 @@ void setDirection(Direction dir)
     return;
 }
 
-void swapDirection()            //Does not swap none, sjekka opp/ned hele tiden shady
+void swapDirection()
 {
     switch (getDirection())
     {
@@ -53,14 +53,3 @@ void swapDirection()            //Does not swap none, sjekka opp/ned hele tiden 
         break;
     }
 }
-/*
-Action getAction()
-{
-    //return t.action;
-}
-
-void setAction(Action a)
-{
-    //t.action = a;
-    return;
-}*/

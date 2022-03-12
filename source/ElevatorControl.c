@@ -14,7 +14,6 @@ void initElevator()
     initBookings();
     initLights();
     resetTimer();
-    printf("=== Oskar er ikke pen ===\n");
 }
 
 
@@ -37,14 +36,7 @@ Trigger entryState(void)
 
 Trigger doorOpenState()
 {
-    updateFloorPanel();
     setDoorLight();
-    updateTimer();
-
-    int floor = getFloor();
-    clearButtonLamps(floor);
-    clearBooking(floor);
-
 
     if (isStopPressed())
     {
@@ -54,6 +46,11 @@ Trigger doorOpenState()
         resetTimer();
         return stop;
     }
+    updateFloorPanel();
+
+    int lastFloor = getLastFloor();
+    clearButtonLamps(lastFloor);
+    clearBooking(lastFloor);
     clearStopLamp();
 
     if (isObstructed())
@@ -62,7 +59,7 @@ Trigger doorOpenState()
         return stop;
     }
 
-    if (checkTimer(1000))
+    if (checkTimer(3))
     {
         clearDoorLight();
         resetTimer();
@@ -71,20 +68,17 @@ Trigger doorOpenState()
     return stop;
 }
 
-
 Trigger stopFloorState(void)
 {
-    updateFloorPanel();
-    int floor = getFloor();
-    int direction = getDirection();
-
     if (isStopPressed())
     {
         return stop;
     }
+    updateFloorPanel();
+
     //Oppdater bestillinger
     //Sletter bestilling i etasjen (så lenge døra er åpen)
-    if (getNextDestination(floor, direction) != NO_BOOKINGS)
+    if (getNextDestination(getLastFloor(), getDirection()) != NO_BOOKINGS)
     {
         return motion;
     }
@@ -92,6 +86,7 @@ Trigger stopFloorState(void)
 
 
 }
+
 Trigger movingState(void)
 {
     updateFloorPanel();
@@ -120,14 +115,25 @@ Trigger movingState(void)
     if(nextFloor == floor)
     {
         move(NONE);
+        resetTimer();
         return reachedFloor;
     }
+    /*
+    if (nextFloor == lastFloor)
+    {
+        // Om destinasjonen er forrige etasje, må heisen gå i motsatt retning
+        swapDirection();
+        move(getDirection());
+        swapDirection();
+        return motion;
+    }*/
+
     move(getDirection());
     return motion;
 }
+
 Trigger stopBetweenState(void)
 {
-    updateFloorPanel();
     if (isStopPressed())
     {
         setStopLamp();
@@ -136,6 +142,7 @@ Trigger stopBetweenState(void)
         return stop;
     }
     clearStopLamp();
+    updateFloorPanel();
     //wait for next booking
     int lastFloor = getLastFloor();
     int direction = getDirection();
@@ -145,13 +152,9 @@ Trigger stopBetweenState(void)
     {
         return stop;
     }
-    if (nextFloor == lastFloor)
-    {
-        swapDirection();
-    }
+
     return motion;
 }
-
 
 static Trigger (* state[])(void) = {
     entryState,
@@ -197,7 +200,6 @@ StateCodes lookupTransitions(StateCodes s, Trigger t)
     return s;
 }
 
-//https://stackoverflow.com/questions/1371460/state-machines-tutorials/1371829
 
 void runElevator()
 {
@@ -213,14 +215,6 @@ void runElevator()
         trig = stateFunction();
         currentState = lookupTransitions(currentState, trig);
 
-        //midlertidig exit
-        /*if(elevio_stopButton())
-        {
-            move(NONE);
-            elevio_stopLamp(1);
-            break;
-        }*/
-        sleep();
     }
 }
 
@@ -236,8 +230,9 @@ void updateFloorPanel()
                 setBooking(floor, dir);
             }
         }
-
     }
     setFloorIndicator(getLastFloor());
-
 }
+
+
+//https://stackoverflow.com/questions/1371460/state-machines-tutorials/1371829

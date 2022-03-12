@@ -5,8 +5,17 @@
 
 #pragma once
 
-void updateTimer();
+/**
+ * @brief Resets the timer.
+ */
 void resetTimer();
-bool checkTimer(int milliseconds);
-void sleep();
+
+/**
+ * @brief Checks if the timer has counted @p seconds or more.
+ * 
+ * @param[in] seconds Number of seconds.
+ * 
+ * @return true if the timer has counted @p seconds or more, else it returns false.
+ */
+bool checkTimer(int seconds);
 

@@ -7,28 +7,28 @@
 #include "ElevatorEnums.h"
 
 /**
-* @brief Checks if a specific button is pressed
+* @brief Checks if a specific button at a specific floor is pressed.
 *
 * @param[in] floor Elevator floor where the button is located.
 * @param[in] dir Type of button to be checked.
 *
-* @return false if button not pressed, true if button pressed
+* @return false if button not pressed, true if button pressed.
 */
 bool isButtonPressed(int floor, Direction dir);
 
 
 /**
-* @brief Checks if there is an obstruction
+* @brief Checks if there is an obstruction.
 *
-* @return true if there is an obstruction, false otherwise
+* @return true if there is an obstruction, false otherwise.
 */
 bool isObstructed();
 
 
 /**
-* @brief Checks if the stop button is pressed
+* @brief Checks if the stop button is pressed.
 *
-* @return true if the stop button is pressed, false otherwise
+* @return true if the stop button is pressed, false otherwise.
 */
 bool isStopPressed();
 
