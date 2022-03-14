@@ -3,7 +3,6 @@
 #include <stdbool.h>
 #include "driver/elevio.h"
 #include <assert.h>
-// #include <stdio.h>
 
 int dirToInt(Direction dir);
 #define TOP_FLOOR (N_FLOORS -1)
@@ -55,10 +54,6 @@ void setBooking(int floor, Direction dir)
         break;
     case DOWN:
         levels[floor].down = true;
-        /* if (floor == N_FLOORS-1)
-        {
-            levels[floor].up = true;
-        } */
         break;
     case NONE:
         levels[floor].up = true;
