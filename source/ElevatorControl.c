@@ -17,24 +17,38 @@ void initElevator()
 }
 
 
-typedef enum StateCodes {entry, stopFloor, moving, stopBetween, doorOpen} StateCodes;
-typedef enum Trigger {motion, stop, reachedFloor} Trigger;
+typedef enum StateCode
+{
+    entry,
+    stopFloor,
+    moving,
+    stopBetween,
+    doorOpen
+} StateCode;
+
+static StateCode (* state[])(void) = {
+    entryState,
+    stopFloorState,
+    movingState,
+    stopBetweenState,
+    doorOpenState
+};
 
 
-Trigger entryState(void)
+StateCode entryState(void)
 {
     if (getFloor() == -1)
     {
         move(DOWN);
-        return motion;
+        return entry;
     }
     move(NONE);
     updateLastFloor();
-    return reachedFloor;
+    return stopFloor;
 }
 
 
-Trigger doorOpenState()
+StateCode doorOpenState()
 {
     setDoorLight();
 
@@ -44,7 +58,7 @@ Trigger doorOpenState()
         clearAllBookings();
         clearAllButtonLamps();
         resetTimer();
-        return stop;
+        return doorOpen;
     }
     updateFloorPanel();
 
@@ -56,23 +70,23 @@ Trigger doorOpenState()
     if (isObstructed())
     {
         resetTimer();
-        return stop;
+        return doorOpen;
     }
 
     if (checkTimer(3))
     {
         clearDoorLight();
         resetTimer();
-        return reachedFloor;
+        return stopFloor;
     }
-    return stop;
+    return doorOpen;
 }
 
-Trigger stopFloorState(void)
+StateCode stopFloorState(void)
 {
     if (isStopPressed())
     {
-        return stop;
+        return moving;
     }
     updateFloorPanel();
 
@@ -80,17 +94,17 @@ Trigger stopFloorState(void)
     //Sletter bestilling i etasjen (så lenge døra er åpen)
     if (getNextDestination(getLastFloor(), getDirection()) != NO_BOOKINGS)
     {
-        return motion;
+        return moving;
     }
-    return reachedFloor;
+    return stopFloor;
 
 
 }
 
-Trigger movingState(void)
+StateCode movingState(void)
 {
     updateFloorPanel();
-    
+
     int floor = getFloor();
     int lastFloor = getLastFloor();
     int direction = getDirection();
@@ -101,7 +115,7 @@ Trigger movingState(void)
     if (isStopPressed())
     {
         move(NONE);
-        return stop;
+        return stopBetween;
     }
 
     if (nextFloor < lastFloor)
@@ -116,7 +130,7 @@ Trigger movingState(void)
     {
         move(NONE);
         resetTimer();
-        return reachedFloor;
+        return doorOpen;
     }
     /*
     if (nextFloor == lastFloor)
@@ -129,17 +143,17 @@ Trigger movingState(void)
     }*/
 
     move(getDirection());
-    return motion;
+    return moving;
 }
 
-Trigger stopBetweenState(void)
+StateCode stopBetweenState(void)
 {
     if (isStopPressed())
     {
         setStopLamp();
         clearAllBookings();
         clearAllButtonLamps();
-        return stop;
+        return stopBetween;
     }
     clearStopLamp();
     updateFloorPanel();
@@ -150,72 +164,10 @@ Trigger stopBetweenState(void)
 
     if (nextFloor == NO_BOOKINGS)
     {
-        return stop;
+        return stopBetween;
     }
 
-    return motion;
-}
-
-static Trigger (* state[])(void) = {
-    entryState,
-    stopFloorState,
-    movingState,
-    stopBetweenState,
-    doorOpenState
-};
-
-
-struct Transition
-{
-    enum StateCodes currentState;
-    enum Trigger trig;
-    enum StateCodes destinationState;
-};
-
-static struct Transition stateTransitions[] =
-{
-    {entry,       reachedFloor, stopFloor},
-    {entry,       motion,       entry},
-    {stopFloor,   motion,       moving},
-    {stopFloor,   stop,         doorOpen},
-    {stopFloor,   reachedFloor, stopFloor},
-    {moving,      stop,         stopBetween},
-    {moving,      motion,       moving},
-    {moving,      reachedFloor, doorOpen},
-    {stopBetween, motion,       moving},
-    {stopBetween, stop,         stopBetween},
-    {doorOpen,    stop,         doorOpen},
-    {doorOpen,    reachedFloor, stopFloor}
-};
-
-StateCodes lookupTransitions(StateCodes s, Trigger t)
-{
-    for (int i = 0; i < sizeof(stateTransitions)/sizeof(stateTransitions[0]); i++)
-    {
-        if (stateTransitions[i].currentState == s && stateTransitions[i].trig == t)
-        {
-            return stateTransitions[i].destinationState;
-        }
-    }
-    return s;
-}
-
-
-void runElevator()
-{
-    initElevator();
-
-    StateCodes currentState = entry;
-    Trigger trig;
-    Trigger (* stateFunction)(void);
-
-    while(1)
-    {
-        stateFunction = state[currentState];
-        trig = stateFunction();
-        currentState = lookupTransitions(currentState, trig);
-
-    }
+    return moving;
 }
 
 void updateFloorPanel()
@@ -233,6 +185,25 @@ void updateFloorPanel()
     }
     setFloorIndicator(getLastFloor());
 }
+
+
+
+void runElevator()
+{
+    initElevator();
+
+    StateCode currentState = entry;
+    StateCode (* stateFunction)(void);
+
+    while(1)
+    {
+        stateFunction = state[currentState];
+        currentState = stateFunction();
+    }
+}
+
+
+
 
 
 //https://stackoverflow.com/questions/1371460/state-machines-tutorials/1371829
