@@ -6,17 +6,6 @@
 #include "Buttons.h"
 #include "Timer.h"
 
-void updateFloorPanel();
-
-void initElevator()
-{
-    initMotor();
-    initBookings();
-    initLights();
-    resetTimer();
-}
-
-
 typedef enum StateCode
 {
     entry,
@@ -26,7 +15,30 @@ typedef enum StateCode
     doorOpen
 } StateCode;
 
+StateCode entryState(void);
+StateCode doorOpenState();
+StateCode stopFloorState(void);
+StateCode movingState(void);
+StateCode stopBetweenState(void);
+void updateFloorPanel();
 
+static StateCode (* state[])(void) = {
+    entryState,
+    stopFloorState,
+    movingState,
+    stopBetweenState,
+    doorOpenState
+};
+
+
+
+void initElevator()
+{
+    initMotor();
+    initBookings();
+    initLights();
+    resetTimer();
+}
 
 StateCode entryState(void)
 {
@@ -162,13 +174,7 @@ StateCode stopBetweenState(void)
 
     return moving;
 }
-static StateCode (* state[])(void) = {
-    entryState,
-    stopFloorState,
-    movingState,
-    stopBetweenState,
-    doorOpenState
-};
+
 
 void updateFloorPanel()
 {
