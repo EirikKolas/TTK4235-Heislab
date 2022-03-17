@@ -9,8 +9,8 @@
 
 //Definerer statePtr som en peker til en funksjon som tar inn 0 parameter 
 //og returnerer en statePtr
-typedef void (*funcPtr) (void);
-typedef funcPtr (*statePtr) (void);
+typedef void (*_funcPtr) (void);
+typedef _funcPtr (*statePtr) (void);
 
 void initElevator()
 {
