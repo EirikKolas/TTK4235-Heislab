@@ -6,31 +6,11 @@
 #include "Buttons.h"
 #include "Timer.h"
 
-typedef enum StateCode
-{
-    entry,
-    stopFloor,
-    moving,
-    stopBetween,
-    doorOpen
-} StateCode;
 
-StateCode entryState(void);
-StateCode doorOpenState();
-StateCode stopFloorState(void);
-StateCode movingState(void);
-StateCode stopBetweenState(void);
-void updateFloorPanel();
-
-static StateCode (* state[])(void) = {
-    entryState,
-    stopFloorState,
-    movingState,
-    stopBetweenState,
-    doorOpenState
-};
-
-
+//Definerer statePtr som en peker til en funksjon som tar inn 0 parameter 
+//og returnerer en statePtr
+typedef void (*funcPtr) (void);
+typedef funcPtr (*statePtr) (void);
 
 void initElevator()
 {
@@ -40,20 +20,20 @@ void initElevator()
     resetTimer();
 }
 
-StateCode entryState(void)
+statePtr entryState(void)
 {
     if (getFloor() == -1)
     {
         move(DOWN);
-        return entry;
+        return entryState;
     }
     move(NONE);
     updateLastFloor();
-    return stopFloor;
+    return stopFloorState;
 }
 
 
-StateCode doorOpenState()
+statePtr doorOpenState()
 {
     setDoorLight();
 
@@ -63,7 +43,7 @@ StateCode doorOpenState()
         clearAllBookings();
         clearAllButtonLamps();
         resetTimer();
-        return doorOpen;
+        return doorOpenState;
     }
     updateFloorPanel();
 
@@ -75,23 +55,23 @@ StateCode doorOpenState()
     if (isObstructed())
     {
         resetTimer();
-        return doorOpen;
+        return doorOpenState;
     }
 
     if (checkTimer(3))
     {
         clearDoorLight();
         resetTimer();
-        return stopFloor;
+        return stopFloorState;
     }
-    return doorOpen;
+    return doorOpenState;
 }
 
-StateCode stopFloorState(void)
+statePtr stopFloorState(void)
 {
     if (isStopPressed())
     {
-        return moving;
+        return movingState;
     }
     updateFloorPanel();
 
@@ -99,14 +79,14 @@ StateCode stopFloorState(void)
     //Sletter bestilling i etasjen (så lenge døra er åpen)
     if (getNextDestination(getLastFloor(), getDirection()) != NO_BOOKINGS)
     {
-        return moving;
+        return movingState;
     }
-    return stopFloor;
+    return stopFloorState;
 
 
 }
 
-StateCode movingState(void)
+statePtr movingState(void)
 {
     updateFloorPanel();
 
@@ -120,7 +100,7 @@ StateCode movingState(void)
     if (isStopPressed())
     {
         move(NONE);
-        return stopBetween;
+        return stopBetweenState;
     }
 
     if (nextFloor < lastFloor)
@@ -135,7 +115,7 @@ StateCode movingState(void)
     {
         move(NONE);
         resetTimer();
-        return doorOpen;
+        return doorOpenState;
     }
     /*
     if (nextFloor == lastFloor)
@@ -148,17 +128,17 @@ StateCode movingState(void)
     }*/
 
     move(getDirection());
-    return moving;
+    return movingState;
 }
 
-StateCode stopBetweenState(void)
+statePtr stopBetweenState(void)
 {
     if (isStopPressed())
     {
         setStopLamp();
         clearAllBookings();
         clearAllButtonLamps();
-        return stopBetween;
+        return stopBetweenState;
     }
     clearStopLamp();
     updateFloorPanel();
@@ -169,10 +149,10 @@ StateCode stopBetweenState(void)
 
     if (nextFloor == NO_BOOKINGS)
     {
-        return stopBetween;
+        return stopBetweenState;
     }
 
-    return moving;
+    return movingState;
 }
 
 
@@ -198,13 +178,11 @@ void runElevator()
 {
     initElevator();
 
-    StateCode currentState = entry;
-    StateCode (* stateFunction)(void);
+    statePtr state = entryState;
 
     while(1)
     {
-        stateFunction = state[currentState];
-        currentState = stateFunction();
+        state = state();
     }
 }
 
