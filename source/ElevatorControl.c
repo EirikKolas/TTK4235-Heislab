@@ -26,13 +26,6 @@ typedef enum StateCode
     doorOpen
 } StateCode;
 
-static StateCode (* state[])(void) = {
-    entryState,
-    stopFloorState,
-    movingState,
-    stopBetweenState,
-    doorOpenState
-};
 
 
 StateCode entryState(void)
@@ -169,6 +162,13 @@ StateCode stopBetweenState(void)
 
     return moving;
 }
+static StateCode (* state[])(void) = {
+    entryState,
+    stopFloorState,
+    movingState,
+    stopBetweenState,
+    doorOpenState
+};
 
 void updateFloorPanel()
 {

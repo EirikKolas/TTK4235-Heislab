@@ -9,7 +9,7 @@
 #define NUM_DIRECTIONS 3
 
 /**
-* @brief Direction enum with the directions @p UP , @p DOWN and @p NONE .
+* @brief Direction enum with the directions UP , DOWN and NONE .
 */
 typedef enum
 {

@@ -14,6 +14,6 @@ void initMotor();
 /**
 * @brief Turns off the motor or turns on the motor in a specific direction.
 *
-* @param[in] dir Direction of the motor. The direction can be @c NONE, which will stop the elevator.
+* @param[in] dir Direction of the motor. The direction can be NONE, which will stop the elevator.
 */
 void move(Direction dir);

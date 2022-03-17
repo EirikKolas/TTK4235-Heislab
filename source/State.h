@@ -33,7 +33,7 @@ Direction getDirection();
 void updateLastFloor();
 
 /**
- * @brief Sets the direction of the elevator to @p dir .
+ * @brief Sets the direction of the elevator to dir.
  * 
  * @param[in] dir The direction of which the elevator is to be set.
  */
