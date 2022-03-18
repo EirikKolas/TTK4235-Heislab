@@ -7,11 +7,18 @@
 #include "Timer.h"
 
 
+
 //Definerer statePtr som en peker til en funksjon som tar inn 0 parameter 
 //og returnerer en statePtr
 typedef void (*_funcPtr) (void);
 typedef _funcPtr (*statePtr) (void);
 
+statePtr entryState(void);
+statePtr doorOpenState();
+statePtr stopFloorState(void);
+statePtr movingState(void);
+statePtr stopBetweenState(void);
+void updateFloorPanel();
 void initElevator()
 {
     initMotor();
