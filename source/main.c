@@ -2,6 +2,5 @@
 
 int main(){
     runElevator();
-
     return 0;
 }

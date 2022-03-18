@@ -47,10 +47,6 @@ void setBooking(int floor, Direction dir)
     {
     case UP:
         levels[floor].up = true;
-        /* if (floor == 0)
-        {
-            levels[floor].down = true;
-        } */
         break;
     case DOWN:
         levels[floor].down = true;
