@@ -18,6 +18,7 @@ statePtr doorOpenState();
 statePtr stopFloorState(void);
 statePtr movingState(void);
 statePtr stopBetweenState(void);
+
 void updateFloorPanel();
 void initElevator()
 {
